@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <title>InkPodium — annotate, compose &amp; present PDFs in your browser</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script src="vendor/pdf.min.js"></script>
 <script src="vendor/pdf-lib.min.js"></script>
 <style>
@@ -225,6 +227,7 @@ body.present #tbHide{display:flex!important}
 <div id="counter">1 / 1</div>
 
 <section class="slide cover noprint" data-inkkey="cover">
+  <div id="coverLogo" aria-hidden="true" style="margin-bottom:2px"><svg width="92" height="104" viewBox="0 0 170 192"><text x="42" y="132" font-family="Georgia,'Liberation Serif',serif" font-size="88" font-weight="500" fill="#861F41">&#305;P</text><path d="M61 86 C55 77 52 69 53 62 C54 56 57 52 61 50 C65 52 68 56 69 62 C70 69 67 77 61 86 Z" fill="#E5751F"/><line x1="61" y1="83" x2="61" y2="67" stroke="#861F41" stroke-width="2" stroke-linecap="round"/><circle cx="61" cy="64" r="2.4" fill="#861F41"/><rect x="32" y="162" width="34" height="9" rx="2" fill="#c07a90"/><rect x="66" y="154" width="36" height="17" rx="2" fill="#861F41"/><rect x="102" y="165" width="34" height="6" rx="2" fill="#c07a90"/></svg></div>
   <div style="font-size:20px;letter-spacing:3px;color:#E5751F;font-weight:600">OPEN SOURCE · NOTHING LEAVES YOUR DEVICE</div>
   <h1 style="margin:12px 0 6px">InkPodium</h1>
   <div style="font-size:20px;color:#555;margin-bottom:26px">Annotate, compose, and present PDFs — entirely in your browser</div>
@@ -725,7 +728,7 @@ function onVV(){
   if(vvRAF)return;
   vvRAF=requestAnimationFrame(()=>{vvRAF=null;sizeInk();pinUI();});
 }
-try{document.getElementById('brand').textContent+=' · b755';}catch(e){}
+try{document.getElementById('brand').textContent+=' · b756';}catch(e){}
 sizeInk();pinUI();
 addEventListener('resize',onVV);
 if(window.visualViewport){visualViewport.addEventListener('resize',onVV);visualViewport.addEventListener('scroll',onVV);}

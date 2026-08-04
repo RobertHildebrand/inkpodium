@@ -1,3 +1,5 @@
+<p align="center"><img src="logo.svg" width="150" alt="InkPodium logo — an iP monogram with a pen nib dotting the i, standing on a winner's podium"></p>
+
 # InkPodium
 
 **Annotate, compose, and present PDFs — entirely in your browser.**
