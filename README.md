@@ -45,8 +45,13 @@ A single-file, serverless PDF studio:
 
 ## Use
 
-Open the site (works offline after first load on most browsers), open a PDF or
-start writing on blank pages. Press `?` for the full guide.
+Open the site, open a PDF or start writing on blank pages. Press `?` for the
+full guide.
+
+**Install it as an app** (optional): on iPhone/iPad use Share → *Add to Home
+Screen*; on Mac/Windows, Chrome and Edge show an *Install* icon in the address
+bar — you get a Dock/Start-menu icon that opens in its own window and works
+fully offline. Installed copies update themselves whenever the site does.
 
 MIT licensed. Built with [pdf.js](https://mozilla.github.io/pdf.js/),
 [pdf-lib](https://pdf-lib.js.org/), and [MathJax](https://www.mathjax.org/).
