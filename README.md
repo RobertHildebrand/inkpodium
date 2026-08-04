@@ -1,8 +1,8 @@
-# OpenMarkup
+# InkPodium
 
 **Annotate, compose, and present PDFs — entirely in your browser.**
 
-Live: **https://roberthildebrand.github.io/openmarkup/**
+Live: **https://roberthildebrand.github.io/inkpodium/**
 
 A single-file, serverless PDF studio:
 
