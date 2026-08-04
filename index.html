@@ -341,6 +341,7 @@ body.present #tbHide{display:flex!important}
   <button id="pwidth" title="pen thickness" style="background:#26282e;color:#fff;font-size:17px">&#9679;</button>
   <button id="pundo" title="Undo (Ctrl/Cmd+Z)" style="background:#3a3d45;color:#fff">&#8630;</button>
   <button id="predo" title="Redo (Ctrl/Cmd+Shift+Z)" style="background:#3a3d45;color:#fff">&#8631;</button>
+  <button id="phand" title="Move tool: grab and drag text, math, shapes, or strokes (V)" style="background:#fff;border:2px solid #999">&#9995;</button>
   <button id="plasso" title="Lasso: select strokes to move, resize, recolor, or delete" style="background:#fff;border:2px solid #999">&#11034;</button>
   <button id="ptext" title="Text box: click the page to type" style="background:#fff;border:2px solid #999;font-weight:700">T</button>
   <button id="prect" title="Rectangle" style="background:#fff;border:2px solid #999">&#9645;</button>
@@ -519,7 +520,7 @@ addEventListener('touchend',e=>{
 
 /* ================= ink engine (identical to the lecture decks) ================= */
 const ink=document.getElementById('ink'),ictx=ink.getContext('2d');
-let drawing=false,penColor='#c8102e',penIsHL=false,penWidth=3.5,curStroke=null,inkStore={},inkDirty=false,toolMode='pen',eraseChanged=false,eraseBefore=null,strokeBefore=null,lassoPts=null,sel=null,selDrag=null,draft=null,textEditing=null;
+let drawing=false,penColor='#c8102e',penIsHL=false,penWidth=3.5,curStroke=null,inkStore={},inkDirty=false,toolMode='pen',eraseChanged=false,eraseBefore=null,strokeBefore=null,lassoPts=null,sel=null,selDrag=null,draft=null,textEditing=null,handDrag=null;
 try{inkStore=JSON.parse(localStorage.getItem('ink2:'+location.pathname))||{};}catch(e){inkStore={};}
 Object.keys(inkStore).forEach(k=>(inkStore[k]||[]).forEach(it=>{
   if(it.type==='text'&&!it.tl){it.y-=(it.size||22)*0.85;it.tl=1;}
@@ -592,6 +593,29 @@ function itemBBox(it){
     return [it.x,it.y,it.x+(it.size||28)*Math.max(2,(it.tex||'').length*0.4),it.y+(it.size||28)*1.4];
   }
   return [Math.min(it.x1,it.x2),Math.min(it.y1,it.y2),Math.max(it.x1,it.x2),Math.max(it.y1,it.y2)];
+}
+function segDist(p,a,b){
+  const dx=b[0]-a[0],dy=b[1]-a[1],L2=dx*dx+dy*dy;
+  const t=L2?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/L2)):0;
+  return Math.hypot(p[0]-(a[0]+t*dx),p[1]-(a[1]+t*dy));
+}
+function hitItemAt(dp,arr){
+  for(let i=arr.length-1;i>=0;i--){
+    const it=arr[i];
+    if(it.p){
+      const tol=Math.max(12,(it.w||3.5)*1.6+6);
+      if(it.p.length<=10){
+        for(let k=0;k<it.p.length-1;k++)if(segDist(dp,it.p[k],it.p[k+1])<tol)return it;
+        if(it.p.length===1&&Math.hypot(dp[0]-it.p[0][0],dp[1]-it.p[0][1])<tol)return it;
+      }else{
+        for(const q of it.p)if(Math.hypot(dp[0]-q[0],dp[1]-q[1])<tol)return it;
+      }
+    }else{
+      const bb=itemBBox(it);
+      if(dp[0]>bb[0]-6&&dp[0]<bb[2]+6&&dp[1]>bb[1]-6&&dp[1]<bb[3]+6)return it;
+    }
+  }
+  return null;
 }
 function renderItem(c2,it,mapper,wscale){
   if(it.p){renderStroke(c2,it,mapper,wscale);return;}
@@ -868,7 +892,7 @@ function setTool(m){
   redrawInk();
 }
 function updateToolUI2(){
-  [['plasso','lasso'],['ptext','text'],['prect','rect'],['pellipse','ellipse'],['parrow','arrow']].forEach(x=>{
+  [['phand','hand'],['tbMove','hand'],['plasso','lasso'],['ptext','text'],['prect','rect'],['pellipse','ellipse'],['parrow','arrow']].forEach(x=>{
     const el=document.getElementById(x[0]);if(el)el.classList.toggle('on',toolMode===x[1]&&!erasing);
   });
   updateToolUI();
@@ -1102,6 +1126,13 @@ ink.addEventListener('pointerdown',e=>{
   drawing=true;
   const dp=toDeck(e);
   if(erasing){eraseChanged=false;eraseBefore=(inkStore[inkKey()]||[]).slice();eraseAt(e);return;}
+  if(toolMode==='hand'){
+    const key=inkKey(),arr=inkStore[key]||[];
+    const hit=hitItemAt(dp,arr);
+    if(hit){handDrag={item:hit,last:dp,key:key,before:arr.slice().map(cloneItem)};ink.style.cursor='grabbing';}
+    else{drawing=false;handDrag=null;}
+    return;
+  }
   if(toolMode==='lasso'){
     if(sel){
       const bb=selBBox();
@@ -1138,6 +1169,17 @@ ink.addEventListener('pointerdown',e=>{
 });
 ink.addEventListener('pointermove',e=>{
   if(erasing){e.preventDefault();if(drawing)eraseAt(e);else{redrawInk();drawEraserRing(e);}return;}
+  if(toolMode==='hand'){
+    if(!drawing){ink.style.cursor=hitItemAt(toDeck(e),inkStore[inkKey()]||[])?'grab':'';return;}
+    e.preventDefault();
+    if(handDrag){
+      const dp2=toDeck(e);
+      translateItem(handDrag.item,dp2[0]-handDrag.last[0],dp2[1]-handDrag.last[1]);
+      handDrag.last=dp2;
+      redrawInk();
+    }
+    return;
+  }
   if(!drawing)return;e.preventDefault();
   const dp=toDeck(e);
   if(toolMode==='lasso'){
@@ -1190,6 +1232,14 @@ function endPointer(){
   if(erasing){
     if(eraseChanged&&eraseBefore)pushOp({key:key,before:eraseBefore,after:(inkStore[key]||[]).slice()});
     eraseBefore=null;saveInkSoon();return;
+  }
+  if(toolMode==='hand'){
+    if(handDrag){
+      pushOp({key:handDrag.key,before:handDrag.before,after:(inkStore[handDrag.key]||[]).slice().map(cloneItem)});
+      handDrag=null;saveInkSoon();
+    }
+    ink.style.cursor='grab';
+    return;
   }
   if(toolMode==='lasso'){
     if(selDrag){selDrag=null;commitSelOp();redrawInk();return;}
@@ -1348,9 +1398,10 @@ document.getElementById('ppartial').onclick=()=>setEraser(erasing==='partial'?nu
 document.getElementById('pclear').onclick=clearInk;
 (function(){const b=document.getElementById('pwidth');if(!b)return;const Ws=[2,3.5,6],G=['\u00b7','\u25cf','\u2b24'];let wi=1;b.onclick=()=>{wi=(wi+1)%3;penWidth=Ws[wi];b.innerHTML=G[wi];};})();
 document.getElementById('pclose').onclick=togglePen;
-['plasso','ptext','prect','pellipse','parrow'].forEach(id=>{
+['phand','plasso','ptext','prect','pellipse','parrow'].forEach(id=>{
+  const M={phand:'hand',plasso:'lasso',ptext:'text',prect:'rect',pellipse:'ellipse',parrow:'arrow'};
   const el=document.getElementById(id);
-  if(el)el.onclick=()=>setTool(toolMode===({plasso:'lasso',ptext:'text',prect:'rect',pellipse:'ellipse',parrow:'arrow'})[id]?'pen':({plasso:'lasso',ptext:'text',prect:'rect',pellipse:'ellipse',parrow:'arrow'})[id]);
+  if(el)el.onclick=()=>setTool(toolMode===M[id]?'pen':M[id]);
 });
 document.getElementById('pundo').onclick=doUndo;
 document.getElementById('predo').onclick=doRedo;
