@@ -276,7 +276,7 @@ body.present #tbHide{display:flex!important}
     <div class="tutsec"><b class="h">Pages</b>
       &#9776; <b>Pages</b> opens the organizer: <b>drag cards to reorder</b> (touch: press &amp; hold to lift), append more PDFs, insert blanks anywhere, remove pages. Annotations follow their pages.</div>
     <div class="tutsec"><b class="h">Math &amp; graphs</b>
-      The text tool's <b>&radic;x&#772; TeX</b> button turns a text box into rendered LaTeX (live preview while you type) · <b>&#128200; Plot</b> stamps f(x) with axes onto the page as ordinary ink — undo, lasso, or erase it like any stroke · <b>&#65291; Blank page &#9662;</b> in the organizer picks the paper: blank, lined, grid, or dots (the ruling exports with the PDF).</div>
+      The <b>&#9995; Move</b> tool (<span class="kbd">V</span>) grabs any text box, equation, shape, or stroke and drags it — the lasso still handles multi-select, resize, and recolor. The text tool's <b>&radic;x&#772; TeX</b> button turns a text box into rendered LaTeX (live preview while you type) · <b>&#128200; Plot</b> stamps f(x) with axes onto the page as ordinary ink — undo, lasso, or erase it like any stroke · <b>&#65291; Blank page &#9662;</b> in the organizer picks the paper: blank, lined, grid, or dots (the ruling exports with the PDF).</div>
     <div class="tutsec"><b class="h">View &amp; find</b>
       Two-finger pinch or <span class="kbd">+</span>/<span class="kbd">&minus;</span>/<span class="kbd">0</span> zoom (Ctrl+scroll on laptop) · drag or scroll to pan when zoomed · <span class="kbd">M</span> opens the page menu with thumbnails and <b>text search</b>.</div>
     <div class="tutsec"><b class="h">Present</b>
@@ -491,6 +491,7 @@ addEventListener('keydown',e=>{
     case 'l':case 'L':toggleLaser();break;
     case 'h':case 'H':toggleHandout();break;
     case 'w':case 'W':toggleWhiteboard();break;
+    case 'v':case 'V':setTool(toolMode==='hand'?'pen':'hand');break;
     case 'n':case 'N':show(addPage());break;
     case 'm':case 'M':toc.classList.toggle('open');break;
     case '?':document.getElementById('tut').classList.toggle('open');break;
@@ -724,7 +725,7 @@ function onVV(){
   if(vvRAF)return;
   vvRAF=requestAnimationFrame(()=>{vvRAF=null;sizeInk();pinUI();});
 }
-try{document.getElementById('brand').textContent+=' · b753';}catch(e){}
+try{document.getElementById('brand').textContent+=' · b754';}catch(e){}
 sizeInk();pinUI();
 addEventListener('resize',onVV);
 if(window.visualViewport){visualViewport.addEventListener('resize',onVV);visualViewport.addEventListener('scroll',onVV);}
@@ -888,6 +889,7 @@ function setTool(m){
   if(m!=='pen')setEraser(null);
   if(!penOn)togglePen();
   if(m!=='lasso')clearSel();
+  if(m!=='hand'){handDrag=null;ink.style.cursor='';}
   updateToolUI2();
   redrawInk();
 }
@@ -1362,11 +1364,12 @@ function removeInkPrints(){document.querySelectorAll('canvas.inkprint').forEach(
     laser:ic('<circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/><path d="M12 4.5V2M12 22v-2.5M4.5 12H2M22 12h-2.5M6.3 6.3L4.6 4.6M19.4 19.4l-1.7-1.7M17.7 6.3l1.7-1.7M4.6 19.4l1.7-1.7"/>'),
     present:ic('<rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M10 7.6v5.3l4.6-2.65z" fill="currentColor" stroke="none"/><path d="M12 16.5v3.5M8.5 21h7"/>'),
     help:ic('<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.7 2.7 0 115.2 1c-.7 1.1-2 1.4-2 3"/><circle cx="12.4" cy="16.8" r="0.6" fill="currentColor" stroke="none"/>'),
-    hide:ic('<polyline points="6 10 12 16 18 10"/>')
+    hide:ic('<polyline points="6 10 12 16 18 10"/>'),
+    move:ic('<path d="M18 11V6a2 2 0 00-4 0"/><path d="M14 10V4a2 2 0 00-4 0v6"/><path d="M10 10.5V6a2 2 0 00-4 0v8"/><path d="M18 8a2 2 0 114 0v6a8 8 0 01-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 012.83-2.82L7 15"/>')
   };
   const TB=(id,icon,label,title)=>'<button id="'+id+'" title="'+title+'">'+ICO[icon]+'<span class="tblbl">'+label+'</span></button>';
   tb.innerHTML=
-    TB('tbPen','pen','Pen','Pen (P)')+TB('tbErase','erase','Erase','Cycle eraser (E)')+TB('tbClear','trash','Clear','Clear ink on this page')+
+    TB('tbPen','pen','Pen','Pen (P)')+TB('tbMove','move','Move','Move things around (V)')+TB('tbErase','erase','Erase','Cycle eraser (E)')+TB('tbClear','trash','Clear','Clear ink on this page')+
     '<span class="tbdiv" aria-hidden="true"></span>'+
     TB('tbUndo','undo','Undo','Undo (Ctrl/Cmd+Z)')+TB('tbRedo','redo','Redo','Redo (Ctrl/Cmd+Shift+Z)')+
     '<span class="tbdiv" aria-hidden="true"></span>'+
@@ -1378,6 +1381,7 @@ function removeInkPrints(){document.querySelectorAll('canvas.inkprint').forEach(
   document.body.appendChild(tb);
   if(coarse)tb.style.display='flex';
   document.getElementById('tbPen').onclick=togglePen;
+  document.getElementById('tbMove').onclick=()=>setTool(toolMode==='hand'?'pen':'hand');
   document.getElementById('tbUndo').onclick=doUndo;
   document.getElementById('tbRedo').onclick=doRedo;
   document.getElementById('tbErase').onclick=cycleEraser;
