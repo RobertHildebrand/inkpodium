@@ -5,6 +5,14 @@
 <title>InkPodium — annotate, compose &amp; present PDFs in your browser</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="description" content="Free, open-source PDF studio: pressure ink, LaTeX, function plots, page composition, and presentation mode — entirely in your browser. Nothing leaves your device.">
+<meta name="theme-color" content="#861F41">
+<meta property="og:title" content="InkPodium">
+<meta property="og:description" content="Annotate, compose &amp; present PDFs — entirely in your browser. Free, open source, nothing leaves your device.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://roberthildebrand.github.io/inkpodium/">
+<meta property="og:image" content="https://roberthildebrand.github.io/inkpodium/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
 <script src="vendor/pdf.min.js"></script>
 <script src="vendor/pdf-lib.min.js"></script>
 <style>
@@ -730,7 +738,7 @@ function onVV(){
   if(vvRAF)return;
   vvRAF=requestAnimationFrame(()=>{vvRAF=null;sizeInk();pinUI();});
 }
-try{document.getElementById('brand').textContent+=' · b757';}catch(e){}
+try{document.getElementById('brand').textContent+=' · b758';}catch(e){}
 sizeInk();pinUI();
 addEventListener('resize',onVV);
 if(window.visualViewport){visualViewport.addEventListener('resize',onVV);visualViewport.addEventListener('scroll',onVV);}
