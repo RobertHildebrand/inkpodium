@@ -187,6 +187,12 @@ body.present .cmtmark{display:none}
 #cmtpop .cauth{font-weight:700;color:#6b5a10;font-size:13px;margin-bottom:2px}
 #cmtpop .cdate{color:#9a8a4a;font-size:11.5px;margin-left:8px;font-weight:400}
 #cmtpop .cbody{white-space:pre-wrap;line-height:1.45;max-height:220px;overflow:auto}
+body.oncover:not(.present):not(.handout):not(.signmode) #touchbar,
+body.oncover:not(.present):not(.handout):not(.signmode) #sidectl,
+body.oncover:not(.present):not(.handout):not(.signmode) #zoomctl,
+body.oncover:not(.present):not(.handout):not(.signmode) #tbTab,
+body.oncover:not(.present):not(.handout):not(.signmode) #pchip,
+body.oncover:not(.present):not(.handout):not(.signmode) #pentools{display:none!important}
 body.kidsdoc:not(.oncover):not(.present):not(.handout):not(.signmode) #touchbar,
 body.kidsdoc:not(.oncover):not(.present):not(.handout):not(.signmode) #sidectl,
 body.kidsdoc:not(.oncover):not(.present):not(.handout):not(.signmode) #zoomctl,
@@ -253,7 +259,7 @@ body.handout .printskip{display:none!important}
 body.handout #handoutbar{display:flex}
 
 .cover{justify-content:center;align-items:center;text-align:center}
-.cover .drop{border:3px dashed #c9b8a8;border-radius:16px;padding:34px 60px;background:#fff}
+.cover .drop{border:3px dashed #c9b8a8;border-radius:16px;padding:20px 48px;background:#fff}
 .pdfimg{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%}
 #pgprog{position:fixed;inset:0;background:rgba(20,22,26,.85);z-index:800;display:none;align-items:center;justify-content:center;color:#fff;font-size:22px;font-family:"Fraunces",Georgia,serif}
 .slide.pdfpage{background:#3a3d45}
@@ -350,15 +356,15 @@ body.present #tbHide{display:flex!important}
 <div id="counter">1 / 1</div>
 
 <section class="slide cover noprint" data-inkkey="cover">
-  <div id="coverLogo" aria-hidden="true" style="margin-bottom:2px"><svg width="92" height="104" viewBox="0 0 170 192"><text x="42" y="132" font-family="Georgia,'Liberation Serif',serif" font-size="88" font-weight="500" fill="#861F41">&#305;P</text><path d="M61 86 C55 77 52 69 53 62 C54 56 57 52 61 50 C65 52 68 56 69 62 C70 69 67 77 61 86 Z" fill="#E5751F"/><line x1="61" y1="83" x2="61" y2="67" stroke="#861F41" stroke-width="2" stroke-linecap="round"/><circle cx="61" cy="64" r="2.4" fill="#861F41"/><rect x="32" y="162" width="34" height="9" rx="2" fill="#c07a90"/><rect x="66" y="154" width="36" height="17" rx="2" fill="#861F41"/><rect x="102" y="165" width="34" height="6" rx="2" fill="#c07a90"/></svg></div>
-  <div style="font-size:20px;letter-spacing:3px;color:#E5751F;font-weight:600">OPEN SOURCE · NOTHING LEAVES YOUR DEVICE</div>
-  <h1 style="margin:12px 0 6px">InkPodium</h1>
-  <div style="font-size:20px;color:#555;margin-bottom:26px">Annotate, compose, and present PDFs — entirely in your browser</div>
+  <div id="coverLogo" aria-hidden="true" style="margin-bottom:0"><svg width="76" height="86" viewBox="0 0 170 192"><text x="42" y="132" font-family="Georgia,'Liberation Serif',serif" font-size="88" font-weight="500" fill="#861F41">&#305;P</text><path d="M61 86 C55 77 52 69 53 62 C54 56 57 52 61 50 C65 52 68 56 69 62 C70 69 67 77 61 86 Z" fill="#E5751F"/><line x1="61" y1="83" x2="61" y2="67" stroke="#861F41" stroke-width="2" stroke-linecap="round"/><circle cx="61" cy="64" r="2.4" fill="#861F41"/><rect x="32" y="162" width="34" height="9" rx="2" fill="#c07a90"/><rect x="66" y="154" width="36" height="17" rx="2" fill="#861F41"/><rect x="102" y="165" width="34" height="6" rx="2" fill="#c07a90"/></svg></div>
+  <div style="font-size:17px;letter-spacing:3px;color:#E5751F;font-weight:600">OPEN SOURCE · NOTHING LEAVES YOUR DEVICE</div>
+  <h1 style="margin:8px 0 4px">InkPodium</h1>
+  <div style="font-size:19px;color:#555;margin-bottom:14px">Annotate, compose, and present PDFs — entirely in your browser</div>
   <div class="drop">
     <button class="btn" id="pdfBtn" style="font-size:19px;padding:12px 26px">&#128196; Open a PDF&hellip;</button>
     <input type="file" id="pdfFile" accept="application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none">
     <div style="margin-top:14px"><button class="btn sec" id="signModeBtn" style="background:#861F41;color:#fff">&#9997; Just sign a document</button> <button class="btn sec" id="kidsBtn" style="background:#1a7d3c;color:#fff">&#127912; Kids corner</button> <button class="btn sec" id="presentBtn">&#9998; New whiteboard</button> <button class="btn sec" id="tutBtn">? Tutorial</button> <button class="btn sec" id="resumeBtn" style="display:none">&#10227; Resume last session</button></div>
-  <div id="recents" style="display:none;max-width:520px;margin:18px auto 0;text-align:left"></div>
+  <div id="recents" style="display:none;max-width:520px;margin:10px auto 0;text-align:left;max-height:132px;overflow-y:auto;overscroll-behavior:contain"></div>
   <div class="tiny" style="color:#707070;margin-top:12px;max-width:460px">Your PDF stays on this device — nothing is uploaded anywhere.<br>
     Annotations save in this browser and <b>reattach automatically</b> when you open the same PDF again.</div>
   <div class="tiny" style="margin-top:14px"><a href="https://github.com/RobertHildebrand/inkpodium" target="_blank" rel="noopener" style="color:#861F41;font-weight:600;text-decoration:none">&#9733; Star on GitHub</a> &nbsp;&middot;&nbsp; <a href="#" id="shareApp" style="color:#861F41;font-weight:600;text-decoration:none">&#8599; Share InkPodium</a> &nbsp;&middot;&nbsp; <a href="mailto:robdhildebrand@gmail.com?subject=InkPodium%20feedback" style="color:#861F41;font-weight:600;text-decoration:none">&#9993; Feedback</a></div>
@@ -1028,7 +1034,7 @@ function onVV(){
   if(vvRAF)return;
   vvRAF=requestAnimationFrame(()=>{vvRAF=null;sizeInk();pinUI();});
 }
-try{document.getElementById('brand').textContent+=' · b800';}catch(e){}
+try{document.getElementById('brand').textContent+=' · b801';}catch(e){}
 if('serviceWorker' in navigator&&location.protocol==='https:'){try{navigator.serviceWorker.register('sw.js');}catch(e){}}
 sizeInk();pinUI();
 addEventListener('resize',onVV);
@@ -3286,10 +3292,10 @@ function setSignMode(on){
   }
   fit();
 }
-document.getElementById('signModeBtn').onclick=()=>{setSignMode(true);if(!sources.length)document.getElementById('pdfFile').click();};
+document.getElementById('signModeBtn').onclick=()=>{setSignMode(true);document.getElementById('pdfFile').click();};
 document.getElementById('msOpen').onclick=()=>document.getElementById('pdfFile').click();
-document.getElementById('msSign').onclick=()=>{setSignMode(true);if(!sources.length)document.getElementById('pdfFile').click();};
-document.getElementById('msBoard').onclick=()=>{if(slides.length>1)show(1);};
+document.getElementById('msSign').onclick=()=>{setSignMode(true);document.getElementById('pdfFile').click();};
+document.getElementById('msBoard').onclick=newWhiteboard;
 document.getElementById('msTut').onclick=()=>{document.getElementById('tut').classList.add('open');if(window.tutReset)window.tutReset();};
 (function(){
   try{
@@ -3524,7 +3530,19 @@ function armIdle(){
 addEventListener('pointermove',()=>{if(presentOn)armIdle();});
 addEventListener('pointerdown',()=>{if(presentOn)armIdle();});
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&presentOn)togglePresent();});
-document.getElementById('presentBtn').onclick=()=>{if(slides.length>1)show(1);}; /* start page → first blank page, normal mode */
+function newWhiteboard(){
+  sources=[];
+  pdfDoc=null;pdfAspect=null;currentFP=null;pdfBytes=null;pdfName=null;
+  document.body.classList.remove('kidsdoc');document.body.classList.remove('boardgame');
+  if(typeof currentBoardKind!=='undefined')currentBoardKind=null;
+  document.querySelectorAll('section.pdfpage').forEach(x=>x.remove());
+  document.querySelectorAll('section.whiteboard').forEach(x=>x.remove());
+  const sec=createBlank(null,null);
+  refreshSlides();saveComp();
+  show(slides.indexOf(sec));
+  if(!penOn)togglePen();
+}
+document.getElementById('presentBtn').onclick=newWhiteboard;
 document.getElementById('tbShow').onclick=()=>{
   const tbx=document.getElementById('touchbar');if(!tbx)return;
   const vis=getComputedStyle(tbx).display!=='none';
