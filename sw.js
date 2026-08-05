@@ -1,7 +1,7 @@
 /* InkPodium service worker — offline cache, network-first HTML so new builds always win */
-const CACHE='inkpodium-v1';
+const CACHE='inkpodium-v2';
 const CORE=['./','index.html','favicon.svg','apple-touch-icon.png','manifest.json',
-            'vendor/pdf.min.js','vendor/pdf-lib.min.js','vendor/pdf.worker.min.js','vendor/tex-svg.js'];
+            'vendor/pdf.min.js','vendor/pdf-lib.min.js','vendor/pdf.worker.min.js','vendor/tex-svg.js','vendor/jszip.min.js','vendor/docx-preview.min.js','vendor/html2canvas.min.js'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));
 });
