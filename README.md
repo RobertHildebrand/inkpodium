@@ -53,5 +53,9 @@ Screen*; on Mac/Windows, Chrome and Edge show an *Install* icon in the address
 bar — you get a Dock/Start-menu icon that opens in its own window and works
 fully offline. Installed copies update themselves whenever the site does.
 
+Kids-corner dolphin, bunny, and turtle artwork by **Magnific** via
+[Freepik](https://www.freepik.com), used with attribution; all other kids
+content is original.
+
 MIT licensed. Built with [pdf.js](https://mozilla.github.io/pdf.js/),
 [pdf-lib](https://pdf-lib.js.org/), and [MathJax](https://www.mathjax.org/).
